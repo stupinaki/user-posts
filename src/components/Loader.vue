@@ -1,7 +1,7 @@
 <template>
-    <div>
-      Загрузка...
-    </div>
+  <div>
+    Загрузка...
+  </div>
 </template>
 
 <script>

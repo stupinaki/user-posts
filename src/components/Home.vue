@@ -2,7 +2,7 @@
   <div class="home">
     <Select
         :users="users"
-        :posts="posts"
+        @userChange="onUserChange"
     />
     <PostsList
         :posts="posts"
@@ -25,6 +25,7 @@ export default {
   },
   data(){
     return {
+      userId: null,
       posts: [],
       users: [],
     }
@@ -33,6 +34,12 @@ export default {
     this.$data.users = await fetchUsers();
     this.$data.posts = await fetchPosts();
   },
+  methods: {
+    async onUserChange(userId) {
+      this.$data.userId = userId;
+      this.$data.posts = await fetchPosts(userId);
+    }
+  }
 }
 </script>
 

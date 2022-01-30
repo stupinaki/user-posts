@@ -1,11 +1,11 @@
 <template>
   <form>
     <select
+        v-model="optionValue"
         class="form-select"
         aria-label="Default select example"
         name="usernames"
-        @change="handleFilter"
-        v-model="optionValue"
+        @change="$emit('userChange', optionValue)"
     >
       <option :value="null">
         Выберите автора
@@ -23,6 +23,7 @@
 
 <script>
 
+
 export default {
   name: "Select",
   data(){
@@ -31,19 +32,8 @@ export default {
     }
   },
   props:{
-    posts: Array,
     users: Array,
   },
-  methods: {
-    handleFilter() {
-      const posts = this.$props.posts;
-      const userId = this.optionValue;
-      const filteredPosts = posts.filter(post => post.userId === userId);
-      console.log({filteredPosts})
-    },
-  }
-
-
 }
 </script>
 

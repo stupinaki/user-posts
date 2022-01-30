@@ -1,15 +1,32 @@
 <template>
   <div class="post">
     <div class="postUserName">
-        {{getUsername}}:
+      {{ username }}:
     </div>
     <div class="postContent">
-        {{getPost}}
+      {{ post }}
     </div>
-    <ul class="postComments">
+    <form
+    >
+      <input
+          class="comment"
+          type="text"
+          placeholder="Ваш комментарий"
+          v-model="comment"
+      >
+      <button
+          class="publish"
+          type="submit"
+          @click="handleClick"
+          >
+        Опубликовать
+      </button>
+    </form>
+    <ul class="postComments list-group-flush">
       <li
-          v-for="comment in getComments"
+          v-for="comment in postComments"
           :key="comment.id"
+          class="list-group-item"
       >
         <strong>Имя пользователя: </strong>
         {{comment.name}}
@@ -34,16 +51,17 @@ export default {
       posts: [],
       users: [],
       comments: [],
+      comment: null,
     }
   },
 
   computed:{
-    getPostId(){
+    postId(){
       const {id} = this.$route.params;
       return +id.slice(1);
     },
-    getUsername(){
-      const postId = this.getPostId;
+    username(){
+      const postId = this.postId;
       const posts = this.$data.posts;
       if(posts.length === 0){
         return 'тут будет имя пользователя'
@@ -52,10 +70,10 @@ export default {
       const userId = targetPost.userId;
       const users = this.$data.users;
       const targetUser = users.find(user => user.id === userId);
-      return targetUser.username;
+      return targetUser?.username || 'тут будет имя пользователя';
     },
-    getPost(){
-      const postId = this.getPostId;
+    post(){
+      const postId = this.postId;
       const posts = this.$data.posts;
       if(posts.length === 0){
         return 'тут будет пост'
@@ -63,20 +81,13 @@ export default {
       const targetPost = posts.find(post=> post.id === postId);
       return targetPost.body;
     },
-    getComments(){
-      const postId = this.getPostId;
+    postComments(){
+      const postId = this.postId;
       const comments = this.$data.comments;
       if(comments.length === 0){
         return 'тут будут комментарии'
       }
-      const commentsArr = comments.filter(comment => comment.postId === postId);
-      return commentsArr.map(comment => {
-        return {
-          name: comment.name,
-          body: comment.body,
-          id: comment.id,
-        }
-      })
+      return comments.filter(comment => comment.postId === postId);
     }
   },
   mounted: async function(){
@@ -84,6 +95,29 @@ export default {
     this.$data.users = await fetchUsers();
     this.$data.comments = await fetchComments();
   },
+  methods: {
+    async handleClick(){
+      const comment = this.$data.comment;
+      const commentObj = {
+        body: comment,
+        postId: this.postId,
+        name: 'Unknown',
+      }
+      const response = fetch('https://jsonplaceholder.typicode.com/comments', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+        body:  JSON.stringify(commentObj),
+      })
+      this.$data.comment = '';
+      const newComment = await response.json();
+
+      console.log({newComment})
+      this.$data.comments.push(newComment);
+    },
+
+  }
 }
 </script>
 
@@ -93,5 +127,21 @@ export default {
 }
 .postUserName{
   font-weight: bold;
+}
+.publish,
+.comment {
+  margin-bottom: 1rem;
+  width: 100%;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  color: #212529;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+.postComments {
+  text-decoration: none;
+}
+.postContent{
+  margin-bottom: 12px;
 }
 </style>

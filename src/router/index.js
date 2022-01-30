@@ -12,7 +12,6 @@ const routes = [
     path: '/post:id',
     name: 'Post',
     component: Post,
-    // component: () => import(/* webpackChunkName: "about" */ '../components/Post')
   }
 ]
 
