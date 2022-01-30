@@ -1,23 +1,23 @@
 <template>
-  <ul>
+  <ul class="list list-group-flush">
     <li
       v-for="post in posts"
       :key="post.id"
+      class="list-group-item"
     >
-        {{post.title}}
+        <router-link :to="`/post:${post.id}`">
+          {{post.title}}
+        </router-link>
     </li>
   </ul>
 </template>
 
 <script>
-import {posts} from "../data/posts";
 
 export default {
   name: 'PostList',
-  data(){
-    return {
-      posts,
-    }
+  props: {
+    posts: Array,
   }
 }
 
@@ -25,5 +25,10 @@ export default {
 </script>
 
 <style>
-
+.list{
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
 </style>

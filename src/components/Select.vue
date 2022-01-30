@@ -1,10 +1,14 @@
 <template>
   <form>
     <select
+        class="form-select"
+        aria-label="Default select example"
         name="usernames"
+        @change="handleFilter"
+        v-model="optionValue"
     >
       <option :value="null">
-        Выберите значение
+        Выберите автора
       </option>
       <option
           v-for="user in users"
@@ -18,15 +22,27 @@
 </template>
 
 <script>
-import {users} from "../data/users";
 
 export default {
   name: "Select",
   data(){
     return {
-      users,
+      optionValue: null,
     }
   },
+  props:{
+    posts: Array,
+    users: Array,
+  },
+  methods: {
+    handleFilter() {
+      const posts = this.$props.posts;
+      const userId = this.optionValue;
+      const filteredPosts = posts.filter(post => post.userId === userId);
+      console.log({filteredPosts})
+    },
+  }
+
 
 }
 </script>

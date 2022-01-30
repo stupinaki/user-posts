@@ -1,9 +1,9 @@
 
-export function fetchPosts(page) {
-    const a =  fetch(`https://jsonplaceholder.typicode.com/posts/${page}`)
-        .then((response) => response.json());
-    // todo
-    // eslint-disable-next-line no-debugger
-    debugger;
-    return a;
+export async function fetchPosts(userId='') {
+
+    const url = userId
+        ? `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+        : 'https://jsonplaceholder.typicode.com/posts';
+    const response = await fetch(url);
+    return response.json();
 }

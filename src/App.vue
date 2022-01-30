@@ -1,23 +1,24 @@
 <template>
-  <div>
-    <Select/>
-    <PostList/>
+  <div id="nav">
+    <router-link to="/">Главная страница</router-link>
   </div>
+  <router-view/>
 </template>
 
-<script>
-import PostList from './components/PostsList.vue'
-import Select from "./components/Select";
-
-export default {
-  name: 'App',
-  components: {
-    PostList,
-    Select,
-  }
-}
-</script>
-
 <style>
+@import '~bootstrap/dist/css/bootstrap.css';
+
+#nav {
+  margin: 12px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
 
 </style>
