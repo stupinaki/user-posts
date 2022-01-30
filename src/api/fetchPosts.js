@@ -1,9 +1,6 @@
+import {serializeQuery} from "../helpers/serializeQuery";
 
-export async function fetchPosts(userId='') {
-
-    const url = userId
-        ? `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
-        : 'https://jsonplaceholder.typicode.com/posts';
-    const response = await fetch(url);
+export async function fetchPosts(queries) {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts?${serializeQuery(queries)}`);
     return response.json();
 }

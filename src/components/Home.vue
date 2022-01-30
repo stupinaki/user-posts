@@ -1,17 +1,21 @@
 <template>
   <div class="home">
-    <Select
-        :users="users"
-        @userChange="onUserChange"
-    />
-    <PostsList
-        :posts="posts"
-    />
+    <Loader v-if="loading"/>
+    <template v-else>
+      <Select
+          :users="users"
+          @userChange="onUserChange"
+      />
+      <PostsList
+          :posts="posts"
+      />
+    </template>
   </div>
 </template>
 
 <script>
 import Select from "./Select";
+import Loader from "./Loader";
 import PostsList from "./PostsList";
 import {fetchPosts} from "../api/fetchPosts";
 import {fetchUsers} from "../api/fetchUsers";
@@ -21,23 +25,30 @@ export default {
   name: "Home",
   components: {
     Select,
+    Loader,
     PostsList,
   },
   data(){
     return {
-      userId: null,
       posts: [],
       users: [],
+      loading: true,
     }
   },
   mounted: async function() {
-    this.$data.users = await fetchUsers();
-    this.$data.posts = await fetchPosts();
+    const [users, posts] = await Promise.all([
+      fetchUsers(),
+      fetchPosts(),
+    ])
+    this.$data.users = users;
+    this.$data.posts = posts;
+    this.$data.loading = false;
   },
   methods: {
     async onUserChange(userId) {
-      this.$data.userId = userId;
-      this.$data.posts = await fetchPosts(userId);
+      this.loading = true;
+      this.$data.posts = await fetchPosts({userId});
+      this.loading = false;
     }
   }
 }
