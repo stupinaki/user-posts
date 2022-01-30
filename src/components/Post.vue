@@ -8,8 +8,7 @@
       <div class="postContent">
         {{ post.body }}
       </div>
-      <form
-      >
+      <form>
         <input
             v-model="comment"
             class="comment"
